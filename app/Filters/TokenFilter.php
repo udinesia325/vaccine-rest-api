@@ -6,7 +6,7 @@ use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 
-class CorsFilter implements FilterInterface
+class TokenFilter implements FilterInterface
 {
     /**
      * Do whatever processing this filter needs to do.
@@ -26,19 +26,10 @@ class CorsFilter implements FilterInterface
     public function before(RequestInterface $request, $arguments = null)
     {
         //
-        header("Access-Control-Allow-Origin:*");
-        header("Access-Control-Allow-Headers:*");
-        //create a header to accept all header types
-        header("Access-Control-Allow-Methods:*");
-        //create a header to accept all methods
-        header("Content-Type:application/json");
-        //create a header to accept json
-        header("Access-Control-Allow-Credentials:true");
-        //create a header to accept credentials
-        header("Access-Control-Max-Age:86400");
-        //create a header to accept max age
-
-
+        if (session()->get("token") == null) {
+            header("Content-Type:application/json", true, 401);
+            die(json_encode(["message" => "Unauthorized user"]));
+        }
     }
 
     /**

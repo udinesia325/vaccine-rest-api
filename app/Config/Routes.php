@@ -33,8 +33,22 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
 
+
+// untuk login dan logout
 $routes->post("api/v1/auth/login", "Login::index");
 $routes->post("api/v1/auth/logout", "Login::logout");
+
+// untuk consultations
+$routes->get("api/v1/consultations", "Consultations::index");
+$routes->post("api/v1/consultations", "Consultations::create");
+
+// untuk spot
+$routes->get("api/v1/spots", "Spots::index");
+$routes->get("api/v1/spots/(:num)", "Spots::show/$1");
+
+// untuk vaccinations
+$routes->get("api/v1/vaccinations", "Vaccinations::show");
+$routes->post("api/v1/vaccinations", "Vaccinations::create");
 /*
  * --------------------------------------------------------------------
  * Additional Routing

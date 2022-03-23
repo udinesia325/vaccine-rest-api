@@ -3,6 +3,7 @@
 namespace Config;
 
 use App\Filters\CorsFilter;
+// use App\Filters\TokenFilter;
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Filters\CSRF;
 use CodeIgniter\Filters\DebugToolbar;
@@ -24,7 +25,8 @@ class Filters extends BaseConfig
         'honeypot'      => Honeypot::class,
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
-        'corsFilter' => CorsFilter::class
+        'corsFilter' => CorsFilter::class,
+        // 'tokenFilter' => TokenFilter::class
     ];
 
     /**
@@ -67,5 +69,7 @@ class Filters extends BaseConfig
      *
      * @var array
      */
-    public $filters = [];
+    public $filters = [
+        // 'tokenFilter'      => ['before' => ["api/v1/consultations", "api/v1/spots", "api/v1/spots/*"]]
+    ];
 }

@@ -29,17 +29,25 @@ class Login extends ResourceController
                 ->where("id_card_number", $id_card_number)
                 ->get()->getResultArray();
             // return var_dump($data);
+            if (count($data) == 0) {
+                return $this->loginFail();
+            }
             if (!password_verify($password, $data[0]["password"])) {
                 return $this->loginFail();
             } else {
-                $data = $data[0];
-                session()->set("token", $data["login_tokens"]);
+                $data = $data[0]; //ambil data pertama
+                // return $this->respond($data);
+                // isi login token dengan md5 dari id user
+                $this->societies->db->table("societies")
+                    ->set("login_tokens", md5($data["id_card_number"]))
+                    ->where("id_societies", $data["id_societies"])
+                    ->update();
                 $data = [
                     "name" => $data["name"],
                     "born_date" => $data["born_date"],
                     "gender" => $data["gender"],
                     "address" => $data["address"],
-                    "token" => $data["login_tokens"],
+                    "token" => md5($data["id_card_number"]),
                     "regional" => [
                         "id" => $data["id_regionals"],
                         "province" => $data["province"],
@@ -54,11 +62,8 @@ class Login extends ResourceController
     }
     public function logout()
     {
-        $token = $this->request->getGet("token");
-        if ($token != session()->get("token") || $token == null) {
-            return $this->respond(["message" => "Invalid token"], 401);
-        }
-        session()->destroy();
+        \Config\Services::getToken($this->request->getGet("token"));
+        \Config\Services::logout($this->request->getGet("token"));
         return $this->respond(["message" => "logout success"], 200);
     }
     public function loginFail()
